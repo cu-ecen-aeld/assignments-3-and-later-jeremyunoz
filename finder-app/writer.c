@@ -3,6 +3,7 @@
 #include <syslog.h>
 
 int main(int argc, char *argv[]) {
+    // error checking for arguments
     if (argc != 3) {
         fprintf(stderr, "Error: Missing arguments. Usage: <file_path> <text_to_write>\n");
         exit(1);

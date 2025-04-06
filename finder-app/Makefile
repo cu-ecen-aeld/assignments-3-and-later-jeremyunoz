@@ -13,11 +13,9 @@ CFLAGS = -Wall -g
 # Default target
 all: $(TARGET)
 
-# Rule to build the final application
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
-# Pattern rule for object files
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
