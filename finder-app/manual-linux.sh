@@ -109,6 +109,7 @@ make CROSS_COMPILE=${CROSS_COMPILE}
 # on the target rootfs
 cp writer ${OUTDIR}/rootfs/home
 cp finder.sh ${OUTDIR}/rootfs/home
+cp writer.sh ${OUTDIR}/rootfs/home
 cp finder-test.sh ${OUTDIR}/rootfs/home
 cp autorun-qemu.sh ${OUTDIR}/rootfs/home
 cp conf/assignment.txt ${OUTDIR}/rootfs/home/conf
