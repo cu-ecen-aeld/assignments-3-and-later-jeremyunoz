@@ -62,8 +62,9 @@ fi
 # Create necessary base directories
 mkdir -p rootfs
 cd rootfs
-mkdir -p bin dev etc home lib lib64 proc sbin sys tmp usr var
+mkdir -p bin dev etc home lib lib64 proc sbin sys tmp usr var 
 mkdir -p usr/bin usr/lib usr/sbin
+mkdir -p home/conf
 mkdir -p var/log
 
 cd "$OUTDIR"
@@ -110,8 +111,8 @@ cp writer ${OUTDIR}/rootfs/home
 cp finder.sh ${OUTDIR}/rootfs/home
 cp finder-test.sh ${OUTDIR}/rootfs/home
 cp autorun-qemu.sh ${OUTDIR}/rootfs/home
-cp conf/assignment.txt ${OUTDIR}/rootfs/home
-cp conf/username.txt ${OUTDIR}/rootfs/home
+cp conf/assignment.txt ${OUTDIR}/rootfs/home/conf
+cp conf/username.txt ${OUTDIR}/rootfs/home/conf
 
 # Chown the root directory
 sudo chown -R root:root ${OUTDIR}/rootfs
