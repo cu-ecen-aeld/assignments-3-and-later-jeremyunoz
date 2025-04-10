@@ -41,11 +41,14 @@ if [ ! -e ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ]; then
     make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} defconfig
     # build a kernel image
     make -j4 ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} all
+    # modules 
+    make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} modules
     # build the device tree
     make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} dtbs
 fi
 
 echo "Adding the Image in outdir"
+cp -a ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ${OUTDIR}
 
 echo "Creating the staging directory for the root filesystem"
 cd "$OUTDIR"
@@ -56,7 +59,7 @@ then
 fi
 
 # Create necessary base directoriesm
-mkdir -p "$OUTDIR"/rootfs/{bin,dev,etc,home/conf,lib,lib64,proc,sbin,sys,tmp,usr/{bin,lib,sbin},var/log}
+mkdir -p ${OUTDIR}/rootfs/{bin,dev,etc,home,lib,lib64,proc,sbin,sys,tmp,usr/bin,usr/lib,usr/sbin,var/log}
 
 cd "$OUTDIR"
 if [ ! -d "${OUTDIR}/busybox" ]
@@ -71,15 +74,15 @@ else
 fi
 
 # Make and install busybox
-make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE}
-make CONFIG_PREFIX="${OUTDIR}/rootfs" ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} install
+make -j4 ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE}
+make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} CONFIG_PREFIX=${OUTDIR}/rootfs install
 
 
 echo "Library dependencies"
 ${CROSS_COMPILE}readelf -a bin/busybox | grep "program interpreter"
 ${CROSS_COMPILE}readelf -a bin/busybox | grep "Shared library"
 
-# TODO: Add library dependencies to rootfs
+# Add library dependencies to rootfs
 SYSROOT=$(${CROSS_COMPILE}gcc --print-sysroot)
 echo "${SYSROOT}"
 
@@ -96,6 +99,7 @@ sudo mknod -m 600 ${OUTDIR}/rootfs/dev/console c 5 1
 cd ${FINDER_APP_DIR}
 make clean
 make CROSS_COMPILE=${CROSS_COMPILE}
+echo "${FINDER_APP_DIR}"
 
 # Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
@@ -105,11 +109,12 @@ cp ${FINDER_APP_DIR}/writer ${OUTDIR}/rootfs/home/
 cp -r ${FINDER_APP_DIR}/../conf ${OUTDIR}/rootfs/home/
 cp ${FINDER_APP_DIR}/finder.sh ${OUTDIR}/rootfs/home/
 
-# TODO: Chown the root directory
+# Chown the root directory
 chown -R root:root ${OUTDIR}/rootfs
 
-# TODO: Create initramfs.cpio.gz
+# Create initramfs.cpio.gz
 cd ${OUTDIR}/rootfs
+
 find . | cpio -H newc -ov --owner root:root>${OUTDIR}/initramfs.cpio
 
 gzip -f ${OUTDIR}/initramfs.cpio
