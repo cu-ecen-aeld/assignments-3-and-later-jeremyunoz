@@ -102,23 +102,22 @@ sudo mknod -m 666 dev/console c 5 1
 
 # Clean and build the writer utility
 cd ${FINDER_APP_DIR}
-make clean
-make CROSS_COMPILE=${CROSS_COMPILE}
+make -C ${FINDER_APP_DIR} clean CROSS_COMPILE=${CROSS_COMPILE}
+make -C ${FINDER_APP_DIR} all CROSS_COMPILE=${CROSS_COMPILE}
 
 # Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
-
-cp -a ${FINDER_APP_DIR}/writer ${OUTDIR}/rootfs/home
-cp -a ${FINDER_APP_DIR}/finder.sh ${OUTDIR}/rootfs/home
-cp -a ${FINDER_APP_DIR}/writer.sh ${OUTDIR}/rootfs/home
-cp -a ${FINDER_APP_DIR}/finder-test.sh ${OUTDIR}/rootfs/home
-cp -a ${FINDER_APP_DIR}/autorun-qemu.sh ${OUTDIR}/rootfs/home
-cp -a ${FINDER`_APP_DIR}/conf/assignment.txt ${OUTDIR}/rootfs/home/conf
-cp -a ${FINDER_APP_DIR}/conf/username.txt ${OUTDIR}/rootfs/home/conf
+cp  ${FINDER_APP_DIR}/writer ${OUTDIR}/rootfs/home
+cp  ${FINDER_APP_DIR}/finder.sh ${OUTDIR}/rootfs/home
+cp  ${FINDER_APP_DIR}/writer.sh ${OUTDIR}/rootfs/home
+cp  ${FINDER_APP_DIR}/finder-test.sh ${OUTDIR}/rootfs/home
+cp  ${FINDER_APP_DIR}/autorun-qemu.sh ${OUTDIR}/rootfs/home
+cp  ${FINDER`_APP_DIR}/conf/assignment.txt ${OUTDIR}/rootfs/home/conf
+cp  ${FINDER_APP_DIR}/conf/username.txt ${OUTDIR}/rootfs/home/conf
 
 
 # Chown the root directory
-sudo chown -R root:root ${OUTDIR}/rootfs
+sudo chown -R root:root *
 
 # Create initramfs.cpio.gz
 cd ${OUTDIR}/rootfs
