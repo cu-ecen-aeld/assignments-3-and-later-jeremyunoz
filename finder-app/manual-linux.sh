@@ -42,7 +42,7 @@ if [ ! -e ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ]; then
     # build a kernel image
     make -j4 ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} all
     # modules 
-    make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} modules
+    # make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} modules
     # build the device tree
     make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} dtbs
 fi
