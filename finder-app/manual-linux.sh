@@ -40,10 +40,10 @@ if [ ! -e ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ]; then
     echo "Checking out version ${KERNEL_VERSION}"
     git checkout ${KERNEL_VERSION}
 
-    # TODO: Add your kernel build steps here
+    # Add your kernel build steps here
     make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} mrproper
     make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} defconfig
-    make -j4 ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} all
+    make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} all
     make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} modules
     make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} dtbs
 fi
@@ -60,8 +60,8 @@ then
 fi
 
 # Create necessary base directories
-mkdir -p rootfs
-cd rootfs
+mkdir ${OUTDIR}/rootfs
+cd ${OUTDIR}/rootfs
 mkdir -p bin dev etc home lib lib64 proc sbin sys tmp usr var 
 mkdir -p usr/bin usr/lib usr/sbin
 mkdir -p var/log
@@ -76,12 +76,12 @@ git clone git://busybox.net/busybox.git
     # Configure busybox
     make distclean
     make defconfig
-    make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE}
 else
     cd busybox
 fi
 
 # Make and install busybox
+make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE}
 make CONFIG_PREFIX=${OUTDIR}/rootfs ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} install
 
 # Add library dependencies to rootfs
@@ -102,25 +102,24 @@ sudo mknod -m 666 dev/console c 5 1
 
 # Clean and build the writer utility
 cd ${FINDER_APP_DIR}
-make clean
-make CROSS_COMPILE=${CROSS_COMPILE}
+make clean CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} 
+make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH} 
 
 # Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
+echo "Current working directory for copy:"
+pwd
 cp writer ${OUTDIR}/rootfs/home
 cp finder.sh ${OUTDIR}/rootfs/home
-cp writer.sh ${OUTDIR}/rootfs/home
+cp -a writer.sh ${OUTDIR}/rootfs/home
 cp finder-test.sh ${OUTDIR}/rootfs/home
 cp autorun-qemu.sh ${OUTDIR}/rootfs/home
 cp conf/assignment.txt ${OUTDIR}/rootfs/home/conf
 cp conf/username.txt ${OUTDIR}/rootfs/home/conf
 
-# Add execute permissions to scripts
-chmod +x ${OUTDIR}/rootfs/home/writer
-chmod +x ${OUTDIR}/rootfs/home/finder.sh
-chmod +x ${OUTDIR}/rootfs/home/writer.sh
-chmod +x ${OUTDIR}/rootfs/home/finder-test.sh
-chmod +x ${OUTDIR}/rootfs/home/autorun-qemu.sh
+test -f ${OUTDIR}/rootfs/home/writer.sh && echo "writer.sh copied successfully" || echo "writer.sh MISSING"
+test -f ${OUTDIR}/rootfs/home/finder-test.sh && echo "finder-test.sh copied successfully" || echo "finder-test.sh MISSING"
+test -f ${OUTDIR}/rootfs/home/conf/assignment.txt && echo "assignment.txt copied successfully" || echo "assignment.txt MISSING"
 
 # Chown the root directory
 sudo chown -R root:root ${OUTDIR}/rootfs
