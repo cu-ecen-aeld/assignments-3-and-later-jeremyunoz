@@ -102,22 +102,28 @@ sudo mknod -m 666 dev/console c 5 1
 
 # Clean and build the writer utility
 cd ${FINDER_APP_DIR}
-make -C ${FINDER_APP_DIR} clean CROSS_COMPILE=${CROSS_COMPILE}
-make -C ${FINDER_APP_DIR} all CROSS_COMPILE=${CROSS_COMPILE}
+make clean
+make CROSS_COMPILE=${CROSS_COMPILE}
 
 # Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
-cp  ${FINDER_APP_DIR}/writer ${OUTDIR}/rootfs/home
-cp  ${FINDER_APP_DIR}/finder.sh ${OUTDIR}/rootfs/home
-cp  ${FINDER_APP_DIR}/writer.sh ${OUTDIR}/rootfs/home
-cp  ${FINDER_APP_DIR}/finder-test.sh ${OUTDIR}/rootfs/home
-cp  ${FINDER_APP_DIR}/autorun-qemu.sh ${OUTDIR}/rootfs/home
-cp  ${FINDER`_APP_DIR}/conf/assignment.txt ${OUTDIR}/rootfs/home/conf
-cp  ${FINDER_APP_DIR}/conf/username.txt ${OUTDIR}/rootfs/home/conf
+cp writer ${OUTDIR}/rootfs/home
+cp finder.sh ${OUTDIR}/rootfs/home
+cp writer.sh ${OUTDIR}/rootfs/home
+cp finder-test.sh ${OUTDIR}/rootfs/home
+cp autorun-qemu.sh ${OUTDIR}/rootfs/home
+cp conf/assignment.txt ${OUTDIR}/rootfs/home/conf
+cp conf/username.txt ${OUTDIR}/rootfs/home/conf
 
+# Add execute permissions to scripts
+chmod +x ${OUTDIR}/rootfs/home/writer
+chmod +x ${OUTDIR}/rootfs/home/finder.sh
+chmod +x ${OUTDIR}/rootfs/home/writer.sh
+chmod +x ${OUTDIR}/rootfs/home/finder-test.sh
+chmod +x ${OUTDIR}/rootfs/home/autorun-qemu.sh
 
 # Chown the root directory
-sudo chown -R root:root *
+sudo chown -R root:root ${OUTDIR}/rootfs
 
 # Create initramfs.cpio.gz
 cd ${OUTDIR}/rootfs
