@@ -117,6 +117,7 @@ cp autorun-qemu.sh ${OUTDIR}/rootfs/home
 cp conf/assignment.txt ${OUTDIR}/rootfs/home/conf
 cp conf/username.txt ${OUTDIR}/rootfs/home/conf
 
+test -f ${OUTDIR}/rootfs/home/finder.sh && echo "finder.sh copied successfully" || echo "finder.sh MISSING"
 test -f ${OUTDIR}/rootfs/home/writer.sh && echo "writer.sh copied successfully" || echo "writer.sh MISSING"
 test -f ${OUTDIR}/rootfs/home/finder-test.sh && echo "finder-test.sh copied successfully" || echo "finder-test.sh MISSING"
 test -f ${OUTDIR}/rootfs/home/conf/assignment.txt && echo "assignment.txt copied successfully" || echo "assignment.txt MISSING"

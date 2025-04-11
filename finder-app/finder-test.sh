@@ -58,6 +58,10 @@ do
 	./writer "$WRITEDIR/${username}$i.txt" "$WRITESTR"
 done
 
+echo "Current directory for finder.sh"
+pwd
+echo "Checking if finder.sh exists:"
+ls -l ./finder.sh || echo "finder.sh not found!"
 OUTPUTSTRING=$(./finder.sh "$WRITEDIR" "$WRITESTR")
 
 # remove temporary directories
