@@ -107,8 +107,6 @@ make CROSS_COMPILE=${CROSS_COMPILE} ARCH=${ARCH}
 
 # Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
-echo "Current working directory for copy:"
-pwd
 cp writer ${OUTDIR}/rootfs/home
 cp -a finder.sh ${OUTDIR}/rootfs/home
 cp -a writer.sh ${OUTDIR}/rootfs/home
@@ -117,10 +115,6 @@ cp autorun-qemu.sh ${OUTDIR}/rootfs/home
 cp conf/assignment.txt ${OUTDIR}/rootfs/home/conf
 cp conf/username.txt ${OUTDIR}/rootfs/home/conf
 
-test -f ${OUTDIR}/rootfs/home/finder.sh && echo "finder.sh copied successfully" || echo "finder.sh MISSING"
-test -f ${OUTDIR}/rootfs/home/writer.sh && echo "writer.sh copied successfully" || echo "writer.sh MISSING"
-test -f ${OUTDIR}/rootfs/home/finder-test.sh && echo "finder-test.sh copied successfully" || echo "finder-test.sh MISSING"
-test -f ${OUTDIR}/rootfs/home/conf/assignment.txt && echo "assignment.txt copied successfully" || echo "assignment.txt MISSING"
 
 # Chown the root directory
 sudo chown -R root:root ${OUTDIR}/rootfs
