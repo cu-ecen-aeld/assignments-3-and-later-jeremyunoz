@@ -14,6 +14,9 @@ struct thread_data{
      * between the start_thread_obtaining_mutex function and
      * your thread implementation.
      */
+    pthread_mutex_t mutex;
+
+    int thread_id;
 
     /**
      * Set to true if the thread completed with success, false
@@ -34,7 +37,7 @@ struct thread_data{
 * The thread started should return a pointer to the thread_data structure when it exits, which can be used
 * to free memory as well as to check thread_complete_success for successful exit.
 * If a thread was started succesfully @param thread should be filled with the pthread_create thread ID
-* coresponding to the thread which was started.
+* corresponding to the thread which was started.
 * @return true if the thread could be started, false if a failure occurred.
 */
 bool start_thread_obtaining_mutex(pthread_t *thread, pthread_mutex_t *mutex,int wait_to_obtain_ms, int wait_to_release_ms);

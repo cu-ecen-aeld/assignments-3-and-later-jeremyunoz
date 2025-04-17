@@ -1,4 +1,5 @@
 #include "threading.h"
+#include <pthread.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -10,10 +11,30 @@
 
 void* threadfunc(void* thread_param)
 {
+    struct thread_data *thread_func_args = (struct thread_data*)thread_param;
 
-    // TODO: wait, obtain mutex, wait, release mutex as described by thread_data structure
-    // hint: use a cast like the one below to obtain thread arguments from your parameter
-    //struct thread_data* thread_func_args = (struct thread_data *) thread_param;
+    printf("Waiting for 1 second as thread created!");
+    sleep(1);
+
+    if (pthread_mutex_lock(&thread_func_args->mutex) != 0) {
+        ERROR_LOG("Fail to obtain mutex");
+        thread_func_args->thread_complete_success = false;
+        return thread_param;
+    }
+
+    printf("Waiting for 1 second after obtaining mutex!");
+    sleep(1);
+
+    if (pthread_mutex_unlock(&thread_func_args->mutex) != 0) {
+        ERROR_LOG("Fail to release mutex");
+        thread_func_args->thread_complete_success = false;
+        return thread_param;
+    }
+
+    printf("Released mutex successfully!");
+
+    thread_func_args->thread_complete_success = true;
+
     return thread_param;
 }
 
@@ -28,6 +49,9 @@ bool start_thread_obtaining_mutex(pthread_t *thread, pthread_mutex_t *mutex,int 
      *
      * See implementation details in threading.h file comment block
      */
+
+    
+
     return false;
 }
 
