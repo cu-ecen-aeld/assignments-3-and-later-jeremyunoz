@@ -1,17 +1,21 @@
-# server/Makefile
+CC=gcc
+CFLAGS=-Wall -Wextra -Werror -std=gnu99
 
-CC ?= gcc
-CFLAGS ?= -Wall -Wextra -O2
-
-TARGET = aesdsocket
-SRC = aesdsocket.c
+# Cross compile if CROSS_COMPILE is provided
+CROSS ?=
+TARGET=aesdsocket
+SRC=$(TARGET).c
+OBJ=$(SRC:.c=.o)
 
 all: $(TARGET)
 
-default: all
+$(TARGET): $(OBJ)
+	$(CROSS)$(CC) $(CFLAGS) -o $(TARGET) $(OBJ)
 
-$(TARGET): $(SRC)
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
+%.o: %.c
+	$(CROSS)$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(TARGET)
+	rm -f *.o $(TARGET)
+
+.PHONY: all clean
